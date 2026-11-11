@@ -18,3 +18,37 @@ workflows:
           ./gradlew assembleDebug
     artifacts:
       - android/app/build/outputs/**/*.apk
+
+  android-release:
+    name: Android release (Google Play)
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    environment:
+      android_signing:
+        - backup_crew_upload
+      node: 22
+      java: 21
+    scripts:
+      - name: Install packages
+        script: npm ci
+      - name: Copy web files into Android
+        script: npx cap sync android
+      - name: Set version number
+        script: |
+          cd android
+          sed -i '' "s/versionCode [0-9]*/versionCode $BUILD_NUMBER/" app/build.gradle
+      - name: Build release bundle
+        script: |
+          cd android
+          chmod +x gradlew
+          ./gradlew bundleRelease
+      - name: Sign release bundle
+        script: |
+          jarsigner -sigalg SHA256withRSA -digestalg SHA-256 \
+            -keystore "$CM_KEYSTORE_PATH" \
+            -storepass "$CM_KEYSTORE_PASSWORD" \
+            -keypass "$CM_KEY_PASSWORD" \
+            android/app/build/outputs/bundle/release/app-release.aab \
+            "$CM_KEY_ALIAS"
+    artifacts:
+      - android/app/build/outputs/bundle/release/*.aab
