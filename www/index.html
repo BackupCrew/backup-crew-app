@@ -1,4 +1,88 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Backup Crew"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#F2F5FB"></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Backup Crew"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#F2F5FB"><script src="firebase-app-compat.js"></script><script src="firebase-auth-compat.js"></script><script src="firebase-firestore-compat.js"></script></head><body>
+<script>
+/* Backup Crew data layer (website + phone app): a shared Firestore database.
+   Everyone signs in anonymously (no name or email). Moderators sign in with Google
+   and are listed in the "moderators" collection. */
+(function(){
+  if (window.claude) return;
+  var firebaseConfig = {
+    apiKey: "AIzaSyCZy_fweH51aKjB8yrdYy7H_zA21LiP11o",
+    authDomain: "kindness-crew-2439b.firebaseapp.com",
+    projectId: "kindness-crew-2439b",
+    storageBucket: "kindness-crew-2439b.firebasestorage.app",
+    messagingSenderId: "741596283082",
+    appId: "1:741596283082:web:85931ecaa6da4968bcf433"
+  };
+  var ready;
+  if (!window.firebase || !firebase.initializeApp){
+    ready = Promise.resolve(null);
+  } else {
+    firebase.initializeApp(firebaseConfig);
+    var auth = firebase.auth(), fs = firebase.firestore();
+    ready = new Promise(function(resolve){
+      var done = false;
+      auth.onAuthStateChanged(function(u){
+        if (done) return;
+        if (!u){ auth.signInAnonymously().catch(function(){ done = true; resolve(null); }); return; }
+        done = true;
+        fs.doc("moderators/" + u.uid).get()
+          .then(function(s){ resolve({user: u, mod: s.exists}); })
+          .catch(function(){ resolve({user: u, mod: false}); });
+      });
+    });
+    window.kcAuth = {
+      ready: ready,
+      signInGoogle: function(){
+        var p = new firebase.auth.GoogleAuthProvider();
+        return auth.signInWithPopup(p).catch(function(e){
+          if (e && (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment")) return auth.signInWithRedirect(p);
+          throw e;
+        }).then(function(){ location.reload(); });
+      },
+      signOut: function(){ return auth.signOut().then(function(){ location.reload(); }); }
+    };
+  }
+  function wrapDoc(s){ return {id: s.id, exists: !!s.exists, data: function(){ return s.data(); }}; }
+  function wrapRef(ref){
+    return {
+      id: ref.id,
+      set: function(d){ return ref.set(d); },
+      delete: function(){ return ref.delete(); },
+      onSnapshot: function(next, err){ return ref.onSnapshot(function(s){ next(wrapDoc(s)); }, err || function(){}); }
+    };
+  }
+  function wrapQuery(q, col){
+    return {
+      orderBy: function(f, d){ return wrapQuery(q.orderBy(f, d || "asc"), col); },
+      limit: function(n){ return wrapQuery(q.limit(n), col); },
+      onSnapshot: function(next, err){
+        return q.onSnapshot(function(s){ var docs = s.docs.map(wrapDoc); next({docs: docs, size: docs.length, empty: !docs.length}); }, err || function(){});
+      },
+      add: function(d){ return col.add(d).then(function(r){ return {id: r.id}; }); },
+      doc: function(id){ return wrapRef(col.doc(id)); }
+    };
+  }
+  var dbApi = {
+    collection: function(name){ var c = fs.collection(name); return wrapQuery(c, c); },
+    doc: function(path){ return wrapRef(fs.doc(path)); }
+  };
+  window.claude = {
+    use: function(name){
+      return ready.then(function(r){
+        if (!r) return null;
+        if (name === "db") return dbApi;
+        if (name === "user") return {
+          id: function(){ return Promise.resolve(r.user.uid); },
+          canEdit: function(){ return Promise.resolve(r.mod); }
+        };
+        return null;
+      });
+    }
+  };
+})();
+
+</script>
+
 <title>Backup Crew</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
