@@ -146,7 +146,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .age{color:var(--muted);font-size:.82rem;margin-left:auto}
 .link{font-family:var(--display);font-weight:500;font-size:1.08rem;color:var(--accent);overflow-wrap:anywhere;text-decoration:none}
 .link:hover{text-decoration:underline}
-.why{margin:0;color:var(--ink);overflow-wrap:anywhere}
+.why{margin:0;color:var(--ink);overflow-wrap:anywhere}.post-title{margin:0;font-size:1.05rem;line-height:1.3;font-weight:700;color:var(--ink);overflow-wrap:anywhere}
 .why:empty{display:none}
 .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .count{font-variant-numeric:tabular-nums;font-weight:700;margin-right:auto}
@@ -421,6 +421,9 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
     <section class="view" id="v-backup" hidden>
     <form class="panel" id="nom-form" novalidate>
       <h2 id="backup-title" tabindex="-1">Call in backup</h2>
+      <label for="f-title">Title <span class="hint">Optional. A few words about the post, like "First art post." No names or usernames.</span>
+        <input id="f-title" type="text" maxlength="60" placeholder="Her first digital painting" autocomplete="off">
+      </label>
       <label for="f-url">Link to the post <span class="hint">Instagram, TikTok, YouTube, X, Facebook, Reddit, Snapchat or Twitch links.</span>
         <input id="f-url" type="url" placeholder="https://www.instagram.com/p/…" autocomplete="off" required>
       </label>
@@ -892,6 +895,9 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
     top.append(el("span","age",ago(n.createdAt)));
     return top;
   }
+  function titleEl(n){
+    return n.title ? el("h3","post-title", n.title) : null;
+  }
   function linkEl(n){
     const a = el("a","link", host(n.url) + " ↗"); a.href=n.url; a.target="_blank"; a.rel="noopener noreferrer"; a.title=n.url;
     return a;
@@ -923,7 +929,7 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
       const rm = el("button","ghost"); rm.type="button"; twoTap(rm, "Remove post", "Tap again to remove", () => removePost(n.id));
       act.append(rm);
     }
-    r.append(...[topRow(n), crewTag(n), linkEl(n), why, act].filter(Boolean));
+    r.append(...[topRow(n), crewTag(n), titleEl(n), linkEl(n), why, act].filter(Boolean));
     return r;
   }
 
@@ -931,7 +937,7 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
     const c = el("article","card"); c.dataset.id = n.id;
     const why = el("p","why", n.why || "");
     if (!n.ok){
-      c.append(...[topRow(n), crewTag(n), linkEl(n), why].filter(Boolean), el("p","hint","A moderator will review this before it goes live. You'll see it in the list once it's approved."));
+      c.append(...[topRow(n), crewTag(n), titleEl(n), linkEl(n), why].filter(Boolean), el("p","hint","A moderator will review this before it goes live. You'll see it in the list once it's approved."));
       if (n.createdBy===me){
         const act = el("div","actions"); const rm = el("button","ghost"); rm.type="button";
         twoTap(rm, "Remove", "Tap again to remove", () => removePost(n.id)); act.append(rm); c.append(act);
@@ -977,7 +983,7 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
       act.append(rp);
     }
     const sw = el("div","starter-wrap"); sw.append(el("p","starter-label","Don't know what to say? Use this:"), st);
-    c.append(...[topRow(n), crewTag(n), linkEl(n), why, n.level === 5 ? el("div","danger",DANGER_TEXT) : null, thanksBlock(n), sw, act].filter(Boolean));
+    c.append(...[topRow(n), crewTag(n), titleEl(n), linkEl(n), why, n.level === 5 ? el("div","danger",DANGER_TEXT) : null, thanksBlock(n), sw, act].filter(Boolean));
     return c;
   }
   function doneCard(n){
@@ -1189,8 +1195,8 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
     if (lastHour >= 5) return fail("You've called in backup 5 times in the last hour. Try again a little later.");
     $("f-submit").disabled = true;
     try {
-      const ref = await db.collection("nominations").add({url, platform:$("f-platform").value, why:$("f-why").value.trim().slice(0,240), forSelf, level, createdBy:me, createdAt:Date.now()});
-      $("f-url").value=""; $("f-why").value=""; $("f-who-other").checked=true;
+      const ref = await db.collection("nominations").add({url, platform:$("f-platform").value, why:$("f-why").value.trim().slice(0,240), title:$("f-title").value.trim().slice(0,60), forSelf, level, createdBy:me, createdAt:Date.now()});
+      $("f-url").value=""; $("f-why").value=""; $("f-title").value=""; $("f-who-other").checked=true;
       lvEl.checked = false; $("level5-note").hidden = true;
       pendingFocus = ref && ref.id ? ref.id : null;
       $("p-filter").value = ""; $("l-filter").value = "";
