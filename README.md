@@ -6,6 +6,8 @@ Backup Crew is an anti-bullying web app for students. When someone sees a post w
 
 Built solo by Cheyenne Galler for the 2026 Congressional App Challenge. Code written with help from Claude; crew artwork made with Grok.
 
+![Backup Crew home screen](screenshots/home.png)
+
 ## Why I built this
 
 Late one night, I came across a post making fun of someone I knew from school. One person made a joke, then another joined in, and soon the whole comment section was being cruel and laughing at someone who wasn't even there to defend themselves. I wanted to say something, so I did. I left a positive comment and passed it on to my friends to do the same. Soon there were a few positive comments, but it wasn't enough. They say that for every negative comment, it takes at least five positive comments to maintain the balance.
@@ -19,6 +21,35 @@ That question became Backup Crew. I had never built anything like it, and I didn
 2. They nominate the post to Backup Crew.
 3. Crew members leave kind and inspirational comments on the original post (without mentioning Backup Crew).
 4. The person being bullied sees support instead of only cruelty.
+
+## Features
+
+- **Nominate a post:** Spot a post where someone is being bullied and send it to the crew.
+- **Missions:** Crew members answer nominated posts with kind comments on the original post.
+- **Ranks:** Every mission moves you up, starting with your first mission as a Recruit.
+- **Crew sticker collection:** Unlock a crew member's sticker for each rank level you reach (5 in all).
+- **Weekly backup challenge:** Back up 3 people in one week to earn a Backup Hero badge.
+- **Crew member of the week:** A different crew member is featured each week.
+- **Backup tips:** Advice from each crew member on how to leave comments that actually help.
+- **Live stats:** See how many kind comments have been left, missions completed, and crew members.
+- **Share my rank:** Share your rank once you've completed missions.
+- **Privacy policy and child safety standards:** Linked right in the app.
+
+## Built with
+
+- **HTML, CSS, and JavaScript:** The whole app is one web page.
+- **Firebase:** Sign-in and the database that stores nominations, missions, and comments.
+- **Capacitor:** Turns the web app into Android and iOS apps.
+- **Codemagic:** Builds the Android app for Google Play.
+- **Static.app:** Hosts the live website.
+- **Claude:** Helped write the code.
+- **Grok:** Made the crew artwork.
+
+## What's next
+
+- **Google Play release:** Publishing Backup Crew as an Android app so students can use it on their phones.
+- **Apple App Store:** Bringing it to iPhone after the Android release.
+- **Student feedback:** Sharing it with students at my school and improving it based on what they say.
 
 ## Project structure
 - `www/` – the web app (HTML, CSS, JavaScript)
