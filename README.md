@@ -9,7 +9,8 @@ Built solo by Cheyenne Galler for the 2026 Congressional App Challenge. Code wri
 ## How it works
 1. A student spots a post where someone is being bullied.
 2. They nominate the post to Backup Crew.
-3. Crew members leave kind comments on the original post (without mentioning Backup Crew).
+3. Crew members leave kind and inspriational comments on the original post (without mentioning Backup Crew).
+4. The person being bullied sees support instead of only cruelty.
 
 ## Project structure
 - `www/` – the web app (HTML, CSS, JavaScript)

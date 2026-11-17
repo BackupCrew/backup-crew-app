@@ -7,9 +7,9 @@
   if (window.claude) return;
   var firebaseConfig = {
     apiKey: "AIzaSyCZy_fweH51aKjB8yrdYy7H_zA21LiP11o",
-    authDomain: "kindness-crew-2439b.firebaseapp.com",
-    projectId: "kindness-crew-2439b",
-    storageBucket: "kindness-crew-2439b.firebasestorage.app",
+    authDomain: "backup-crew-2439b.firebaseapp.com",
+    projectId: "backup-crew-2439b",
+    storageBucket: "backup-crew-2439b.firebasestorage.app",
     messagingSenderId: "741596283082",
     appId: "1:741596283082:web:85931ecaa6da4968bcf433"
   };
@@ -358,7 +358,7 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
         <div class="rank-badge" id="rank-badge" aria-hidden="true"></div>
         <div class="rank-info">
           <small>Your rank</small>
-          <b id="rank-name">Not deployed yet</b>
+          <b id="rank-name">Ready for first mission</b>
           <div class="bar"><span id="rank-bar"></span></div>
           <small id="rank-next">Show up for your first mission to become a Recruit.</small>
         </div>
@@ -370,10 +370,10 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
         <button type="button" class="secondary small" id="share-rank" hidden>Share my rank</button>
       </div>
       <div class="panel challenge" id="challenge">
-        <small class="ch-label">Kindness challenge of the week</small>
+        <small class="ch-label">Backup challenge of the week</small>
         <b>Back up 3 people this week</b>
         <div class="dots" id="ch-dots" aria-hidden="true"></div>
-        <small id="ch-text">3 more people to earn this week's Kindness Hero badge.</small>
+        <small id="ch-text">3 more people to earn this week's Backup Hero badge.</small>
       </div>
       <div class="panel cotw">
         <img id="cotw-img" alt="">
@@ -413,7 +413,7 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
         </ul>
       </div>
       <div class="links">
-        <button type="button" class="linkbtn" id="go-tips">Kindness tips</button>
+        <button type="button" class="linkbtn" id="go-tips">Backup tips</button>
         <button type="button" class="linkbtn" id="go-privacy">Privacy &amp; safety</button>
         <button type="button" class="linkbtn" id="go-new">What's new in 2.0</button>
       </div>
@@ -519,7 +519,7 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
           <li>"How bad is it?" levels from 1 to 5. The worse the bullying, the bigger the crew member who shows up.</li>
           <li>Level 5 posts show a safety message about reporting, trusted adults, 911 and 988.</li>
           <li>Starter comments written in each crew member's voice.</li>
-          <li>Crew member of the week, and a Kindness tips page with advice from the crew.</li>
+          <li>Crew member of the week, and a Backup tips page with advice from the crew.</li>
         </ul>
         <h3>Missions</h3>
         <ul>
@@ -535,7 +535,7 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
         <ul>
           <li>Crew ranks from Recruit to Captain.</li>
           <li>A crew sticker collection to unlock.</li>
-          <li>A weekly kindness challenge and Kindness Hero badges.</li>
+          <li>A weekly backup challenge and Backup Hero badges.</li>
           <li>Pop-ups from the crew, and confetti for big moments.</li>
           <li>Share an image of your rank and stickers (website).</li>
         </ul>
@@ -551,7 +551,7 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
     <section class="view" id="v-tips" hidden>
       <button type="button" class="linkbtn back" id="tips-back">&larr; Back to Home</button>
       <article class="panel tips">
-        <h2 id="tips-title" tabindex="-1">Kindness tips</h2>
+        <h2 id="tips-title" tabindex="-1">Backup tips</h2>
         <p class="hint">Advice from the crew on helping without making things worse.</p>
         <div id="tips-list" class="tips-list"></div>
       </article>
@@ -650,7 +650,7 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
   const $ = id => document.getElementById(id);
   let db = null, me = null, canEdit = false, sort = "needs", mode = "active", pendingFocus = null;
   let noms = [], cheers = new Map(), approvals = new Set(), reports = new Map(); // reports: uid -> {nomId:true}
-  // Crew member of the week, and kindness tips from each crew member (key = level)
+  // Crew member of the week, and backup tips from each crew member (key = level)
   const WEEKLY = {
     1: {fact:"Rocky has never left a friend behind. Not once.", tip:"A short kind comment is enough. You don't need the perfect words."},
     2: {fact:"Captain Sunny keeps the mission board on his tablet and checks it every morning.", tip:"Start your day by backing up one person."},
@@ -725,7 +725,7 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
     const missions = Object.keys(mine()).length, idx = rankIndex(missions);
     const cur = RANKS[idx - 1], next = RANKS[idx];
     $("rank-badge").innerHTML = badgeSvg(idx);
-    $("rank-name").textContent = cur ? cur.name : "Not deployed yet";
+    $("rank-name").textContent = cur ? cur.name : "Ready for first mission";
     const prevAt = cur ? cur.at : 0;
     $("rank-bar").style.width = (next ? Math.round((missions - prevAt) / (next.at - prevAt) * 100) : 100) + "%";
     const wk = weekCount(mine());
@@ -733,8 +733,8 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
     const heroes = Object.values(weeks).filter(v => v >= 3).length;
     $("ch-dots").replaceChildren(...[0,1,2].map(k => el("span", k < wk ? "on" : "")));
     $("challenge").classList.toggle("won", wk >= 3);
-    $("ch-text").textContent = (wk >= 3 ? "Challenge complete! You earned this week's Kindness Hero badge." : (3 - wk) + (3 - wk === 1 ? " more person" : " more people") + " to earn this week's Kindness Hero badge.")
-      + (heroes ? " Kindness Hero badges earned: " + heroes + "." : "");
+    $("ch-text").textContent = (wk >= 3 ? "Challenge complete! You earned this week's Backup Hero badge." : (3 - wk) + (3 - wk === 1 ? " more person" : " more people") + " to earn this week's Backup Hero badge.")
+      + (heroes ? " Backup Hero badges earned: " + heroes + "." : "");
     // stickers
     const got = stickerLevels();
     $("stickers").replaceChildren(...[1,2,3,4,5].map(lv => {
@@ -808,7 +808,7 @@ canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
     if (!up && weekHit){
       $("toast-img").src = c.img;
       $("toast-title").textContent = "Challenge complete!";
-      $("toast-text").textContent = "You backed up 3 people this week and earned the Kindness Hero badge.";
+      $("toast-text").textContent = "You backed up 3 people this week and earned the Backup Hero badge.";
       const t0 = $("toast"); t0.hidden = true; void t0.offsetWidth; t0.hidden = false;
       clearTimeout(toastTimer); toastTimer = setTimeout(() => { t0.hidden = true; }, 3400);
       return;
