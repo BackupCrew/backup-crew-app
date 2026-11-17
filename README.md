@@ -51,6 +51,17 @@ That question became Backup Crew. I had never built anything like it, and I didn
 - **Apple App Store:** Bringing it to iPhone after the Android release.
 - **Student feedback:** Sharing it with students at my school and improving it based on what they say.
 
+## Safety and privacy
+
+- Crew members leave only kind comments. They never argue with or reply to the people doing the bullying.
+- Crew members don't mention Backup Crew in their comments, so the support feels personal and the person being targeted isn't singled out.
+- Crew members are encouraged to also report bullying comments to the platform.
+- Backup Crew has a privacy policy and child safety standards, linked in the app.
+
+## Contact
+
+Questions or feedback: backupcrew4u@gmail.com
+
 ## Project structure
 - `www/` – the web app (HTML, CSS, JavaScript)
 - `android/` and `ios/` – native app wrappers built with Capacitor
