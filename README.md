@@ -2,7 +2,7 @@
 
 Backup Crew is an anti-bullying web app for students. When someone sees a post where a person is being bullied, they nominate it to the crew. Crew members then go to the original post and leave kind, supportive comments, so the person being targeted sees support instead of only cruelty.
 
-**Live app:** https://backupcrew.staticdomains.app/
+**Live app:** https://backupcrew.org/
 
 Built solo by Cheyenne Galler for the 2026 Congressional App Challenge. Code written with help from Claude; crew artwork made with Grok.
 
